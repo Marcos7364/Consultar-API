@@ -1,0 +1,332 @@
+body {
+    font-family: 'Montserrat', Arial, sans-serif;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 420px;
+    margin: 40px auto;
+    text-align: center;
+}
+.logo {
+    margin-top: 60px;
+    margin-bottom: 16px;
+}
+.logo span {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.logo .club {
+    color: #ff8c3b;
+}
+.logo .cinepolis {
+    color: #1a2947;
+}
+.subtitle {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a2947;
+    margin-bottom: 36px;
+}
+.input-box {
+    width: 100%;
+    margin: 0 auto 24px auto;
+    max-width: 370px;
+}
+.input-box input {
+    width: 100%;
+    padding: 18px 16px;
+    border: 1.5px solid #dbe3ea;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+}
+.captcha-box {
+    width: 100%;
+    max-width: 270px;
+    margin: 0 auto 24px auto;
+    background: #fff;
+    border-radius: 8px;
+    border: 1.5px solid #dbe3ea;
+    display: flex;
+    align-items: center;
+    padding: 18px 16px;
+    font-size: 17px;
+    color: #1a2947;
+    min-height: 48px;
+    justify-content: flex-start;
+}
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #1a2947;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    animation: spin 1s linear infinite;
+    margin-right: 16px;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+}
+.success {
+    color: #1bbf5c;
+    font-weight: 600;
+}
+.social-title {
+    margin: 32px 0 16px 0;
+    color: #1a2947;
+    font-weight: 500;
+    font-size: 18px;
+}
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 32px;
+}
+.social-icon {
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px #e6e6e6;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+.social-icon:hover {
+    box-shadow: 0 4px 16px #dbe3ea;
+}
+.email-box {
+    position: relative;
+}
+.email-check {
+    position: absolute;
+    right: 16px;
+    top: 12px;
+}
+.continue-btn {
+    width: 100%;
+    max-width: 370px;
+    margin: 24px auto 0 auto;
+    display: block;
+    background: #4d8cff;
+    color: #fff;
+    font-size: 22px;
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-weight: 500;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 0;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.continue-btn:hover {
+    background: #2566e8;
+}
+.password-box {
+    position: relative;
+}
+.toggle-password {
+    position: absolute;
+    right: 16px;
+    top: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+.login-message {
+    margin: 20px auto 0 auto;
+    color: #1bbf5c;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    display: none;
+}
+.login-messageIncorrect {
+    margin: 20px auto 0 auto;
+    color: #bf1b1b;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    display: none;
+}
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.login-form-container {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Remove the login-image and overlay divs from HTML since we're centering the form */
+.login-image, .overlay {
+  display: none;
+}
+
+.login-title {
+  color: #333;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e1e1e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.email-check {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #28a745;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-button:hover:not(:disabled) {
+  background: #764ba2;
+  transform: translateY(-1px);
+}
+
+.login-button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.login-message {
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.login-message.error {
+  background: #fff5f5;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+.login-message.success {
+  background: #f0fff4;
+  color: #28a745;
+  border: 1px solid #28a745;
+}
+
+.spinner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.spinner-circle {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+  
+  .login-image {
+    min-height: 200px;
+  }
+  
+  .login-form-container {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form-container {
+    padding: 1.5rem;
+  }
+  
+  .login-title {
+    font-size: 1.5rem;
+  }
+}

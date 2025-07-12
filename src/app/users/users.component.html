@@ -1,0 +1,26 @@
+<div class="users-container">
+  <table class="users-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Avatar</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{user.id}}</td>
+        <td><img [src]="user.avatar" alt="avatar" width="50"></td>
+        <td>{{user.name}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.role}}</td>
+        <td>
+          <button (click)="deleteUser(user.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
