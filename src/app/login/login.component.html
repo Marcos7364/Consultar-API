@@ -6,18 +6,23 @@
 
   <!-- Right side - Login form -->
   <div class="login-form-container">
-    <!-- Spinner -->
-    <div *ngIf="showSpinner" class="spinner">
-      <div class="spinner-circle"></div>
-    </div>
-
-    <!-- Captcha message -->
-    <div *ngIf="captchaMessage" class="captcha-message" [class.success]="true">
-      {{ captchaMessage }}
-    </div>
-
     <form (ngSubmit)="onSubmit()" class="login-form">
-      <h1 class="login-title">Iniciar Sesión</h1>
+      <!-- Logo -->
+      <div class="login-logo">
+        <img src="https://img.icons8.com/ios-filled/100/000000/book.png" alt="Logo Biblioteca" class="logo-icon">
+        <span class="logo-text">on<b>Lib</b></span>
+      </div>
+
+
+      <!-- Spinner -->
+      <div *ngIf="showSpinner" class="spinner">
+        <div class="spinner-circle"></div>
+      </div>
+
+      <!-- Captcha message -->
+      <div *ngIf="captchaMessage" class="captcha-message" [class.success]="true">
+        {{ captchaMessage }}
+      </div>
 
       <!-- Email input -->
       <div class="input-group">

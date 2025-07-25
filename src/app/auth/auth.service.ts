@@ -1,33 +1,37 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, map, throwError } from 'rxjs';
 
 interface LoginResponse {
-  access_token: string;
-  refresh_token: string;
+  usuario: {
+    id: number;
+    email: string;
+    nombre: string;
+    rol: string;
+  };
+  token: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'https://api.escuelajs.co/api/v1/auth/login';
+  private apiUrl = 'http://localhost:8000/api';
 
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<LoginResponse> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    const body = {
-      email: email,
-      password: password,
-    };
+    const body = { email, password };
 
-    return this.http.post<LoginResponse>(this.apiUrl, body, { headers }).pipe(
-      tap((response: LoginResponse) => {
-        if (response.access_token) {
-          localStorage.setItem('token', response.access_token);
-        }
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, body, { headers }).pipe(
+      map((response) => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('userId', response.usuario.id.toString());
+        localStorage.setItem('userEmail', response.usuario.email);
+        localStorage.setItem('userName', response.usuario.nombre);
+        localStorage.setItem('userRole', response.usuario.rol);
+        return response;
       })
     );
   }
@@ -36,7 +40,15 @@ export class AuthService {
     return !!localStorage.getItem('token');
   }
 
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  getRole(): string | null {
+    return localStorage.getItem('userRole');
+  }
+
   logout(): void {
-    localStorage.removeItem('token');
+    localStorage.clear();
   }
 }

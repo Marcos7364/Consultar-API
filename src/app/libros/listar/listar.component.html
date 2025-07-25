@@ -1,0 +1,15 @@
+<div *ngIf="error" class="alert alert-danger">
+  {{ error }}
+</div>
+
+<h2>Lista de libros</h2>
+<div *ngIf="!error">
+  <div *ngFor="let libro of libros" class="libro-card">
+    <h3>{{ libro.titulo }}</h3>
+    <p><strong>Autor:</strong> {{ libro.autor }}</p>
+    <img [src]="libro.img_url" alt="Portada" width="100" />
+    <p><strong>Descripción:</strong> {{ libro.descripcion }}</p>
+    <a [href]="libro.pdf_url" target="_blank">Ver PDF</a>
+    <hr>
+  </div>
+</div>
