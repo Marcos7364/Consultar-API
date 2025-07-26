@@ -1,1 +1,15 @@
-<p>libros works!</p>
+<div class="container mt-4">
+  <h2>Lista de libros</h2>
+  <button class="btn btn-primary mb-3">Crear libro</button>
+  <div *ngIf="libros?.length === 0" class="alert alert-info">No hay libros disponibles.</div>
+  <div *ngFor="let libro of libros" class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">{{ libro.titulo }}</h5>
+      <p class="card-text"><strong>Autor:</strong> {{ libro.autor }}</p>
+      <p class="card-text"><strong>Descripción:</strong> {{ libro.descripcion }}</p>
+      <img [src]="libro.img_url" alt="Portada" class="img-thumbnail mb-2" width="120" />
+      <button class="btn btn-info btn-sm mr-2">Editar</button>
+      <button class="btn btn-danger btn-sm">Eliminar</button>
+    </div>
+  </div>
+</div>

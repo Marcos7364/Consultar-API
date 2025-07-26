@@ -1,32 +1,28 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Libro } from '../interfaces/libro.interface';
+import { AuthService } from '../auth/auth.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class LibroService {
-  // Asegúrate de que esta URL coincida con tu backend
-  private API = 'http://localhost:8000/api/libros';
+  private apiUrl = 'http://localhost:8000/api/libros';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   getLibros(): Observable<Libro[]> {
-    return this.http.get<Libro[]>(this.API);
-  }
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
 
-  getLibroById(id: number): Observable<Libro> {
-    return this.http.get<Libro>(`${this.API}/${id}`);
-  }
-
-  createLibro(libro: Libro): Observable<Libro> {
-    return this.http.post<Libro>(this.API, libro);
-  }
-
-  updateLibro(id: number, libro: Libro): Observable<Libro> {
-    return this.http.put<Libro>(`${this.API}/${id}`, libro);
-  }
-
-  deleteLibro(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.API}/${id}`);
+    return this.http.get<Libro[]>(this.apiUrl, { headers });
   }
 }

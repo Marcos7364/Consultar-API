@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.email, this.password).subscribe({
       next: () => {
         this.loginMessage = 'Inicio de sesión correcto';
-        this.router.navigate(['/users']);
+        this.router.navigate(['/listar']);
       },
       error: () => {
         this.showSpinner = false;
