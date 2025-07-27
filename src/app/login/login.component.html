@@ -6,22 +6,30 @@
 
   <!-- Right side - Login form -->
   <div class="login-form-container">
-    <form (ngSubmit)="onSubmit()" class="login-form">
+    <form (ngSubmit)="isRegistering ? onRegister() : onSubmit()" class="login-form">
       <!-- Logo -->
       <div class="login-logo">
         <img src="https://img.icons8.com/ios-filled/100/000000/book.png" alt="Logo Biblioteca" class="logo-icon">
         <span class="logo-text">on<b>Lib</b></span>
       </div>
 
+      <h2 class="form-title">{{ isRegistering ? 'Registro' : 'Iniciar Sesión' }}</h2>
 
       <!-- Spinner -->
       <div *ngIf="showSpinner" class="spinner">
         <div class="spinner-circle"></div>
       </div>
 
-      <!-- Captcha message -->
-      <div *ngIf="captchaMessage" class="captcha-message" [class.success]="true">
-        {{ captchaMessage }}
+      <!-- Nombre (solo para registro) -->
+      <div class="input-group" *ngIf="isRegistering">
+        <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          name="nombre" 
+          placeholder="Nombre completo"
+          required
+          minlength="3"
+          [disabled]="inputsDisabled">
       </div>
 
       <!-- Email input -->
@@ -32,12 +40,23 @@
           name="email" 
           placeholder="Correo electrónico" 
           autocomplete="off"
+          (input)="validateEmail()" 
           (blur)="validateEmail()" 
+          [class.invalid]="emailError && email"
+          [class.valid]="emailValid && email"
           [disabled]="inputsDisabled"
           required>
-        <span *ngIf="emailValid" class="email-check">
-          <i class="fas fa-check"></i>
+        <span class="validation-icon">
+          <i class="fas" 
+             [class.fa-check]="emailValid && email" 
+             [class.fa-times]="!emailValid && email"
+             [class.valid]="emailValid && email"
+             [class.invalid]="!emailValid && email">
+          </i>
         </span>
+        <div *ngIf="emailError && email" class="error-message">
+          {{ emailError }}
+        </div>
       </div>
 
       <!-- Password input -->
@@ -46,21 +65,62 @@
           [type]="showPassword ? 'text' : 'password'"
           [(ngModel)]="password" 
           name="password" 
+          (input)="onPasswordChange()"
           placeholder="Contraseña"
+          [class.invalid]="password && password.length < 6"
+          [class.valid]="password && password.length >= 6"
           [disabled]="inputsDisabled"
           required>
         <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
           <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
         </button>
+        <span class="validation-icon" *ngIf="password">
+          <i class="fas" 
+             [class.fa-check]="password.length >= 6" 
+             [class.fa-times]="password.length < 6"
+             [class.valid]="password.length >= 6"
+             [class.invalid]="password.length < 6">
+          </i>
+        </span>
       </div>
 
-      <!-- Login button -->
+      <!-- Confirm Password (solo para registro) -->
+      <div class="input-group" *ngIf="isRegistering">
+        <input 
+          [type]="showConfirmPassword ? 'text' : 'password'"
+          [(ngModel)]="confirmPassword" 
+          name="confirmPassword" 
+          (input)="onPasswordChange()"
+          placeholder="Confirmar contraseña"
+          [class.invalid]="confirmPassword && !passwordsMatch()"
+          [class.valid]="confirmPassword && passwordsMatch()"
+          [disabled]="inputsDisabled"
+          required>
+        <button type="button" class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
+          <i class="fas" [class.fa-eye]="!showConfirmPassword" [class.fa-eye-slash]="showConfirmPassword"></i>
+        </button>
+        <span class="validation-icon" *ngIf="confirmPassword">
+          <i class="fas" 
+             [class.fa-check]="passwordsMatch()" 
+             [class.fa-times]="!passwordsMatch()"
+             [class.valid]="passwordsMatch()"
+             [class.invalid]="!passwordsMatch()">
+          </i>
+        </span>
+      </div>
+
+      <!-- Submit Button -->
       <button type="submit" class="login-button" [disabled]="!showContinueButton">
-        <span *ngIf="!showSpinner">Iniciar sesión</span>
+        <span *ngIf="!showSpinner">{{ isRegistering ? 'Registrarse' : 'Iniciar sesión' }}</span>
         <i *ngIf="showSpinner" class="fas fa-spinner fa-spin"></i>
       </button>
 
-      <!-- Login message -->
+      <!-- Toggle Register/Login Button -->
+      <button type="button" class="toggle-register" (click)="toggleRegister()">
+        {{ isRegistering ? '¿Ya tienes cuenta? Inicia sesión' : '¿No tienes cuenta? Regístrate' }}
+      </button>
+
+      <!-- Messages -->
       <div *ngIf="loginMessage" 
            class="login-message"
            [class.error]="loginMessage.includes('incorrecto')"

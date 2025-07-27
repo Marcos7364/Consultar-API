@@ -64,31 +64,56 @@
 
 .input-group {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .input-group input {
   width: 100%;
   padding: 12px 40px 12px 12px;
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   border-radius: 6px;
   font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.input-group input.valid {
+  border-color: #00cc44;
+}
+
+.input-group input.invalid {
+  border-color: #ff4444;
+}
+
+.validation-icon {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+}
+
+.validation-icon i.valid {
+  color: #00cc44;
+}
+
+.validation-icon i.invalid {
+  color: #ff4444;
 }
 
 .toggle-password {
   position: absolute;
   right: 10px;
-  top: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
+  color: #666;
+  padding: 5px;
 }
 
-.email-check {
-  position: absolute;
-  right: 10px;
-  top: 12px;
-  color: green;
+.toggle-password:hover {
+  color: #333;
 }
 
 .login-button {
@@ -114,7 +139,7 @@
 }
 
 .login-message.success {
-  color: green;
+  color: rgb(12, 171, 12);
 }
 
 .login-message.error {
@@ -124,6 +149,83 @@
 .captcha-message {
   margin-bottom: 15px;
   text-align: center;
-  color: green;
+  color: rgb(12, 171, 12);
   font-weight: bold;
+}
+.input-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.input-group input.invalid {
+  border-color: #ff4444;
+  background-color: rgba(255, 68, 68, 0.05);
+}
+
+.error-message {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  color: #ff4444;
+  font-size: 12px;
+  margin-top: 5px;
+  transition: all 0.3s ease;
+}
+
+.email-check {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #00cc44;
+}
+
+.input-group input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.input-group input.invalid:focus {
+  border-color: #ff4444;
+  box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.2);
+}
+
+.toggle-register {
+  background: none;
+  border: none;
+  color: #4a90e2;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto 0;
+  padding: 10px;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.toggle-register:hover {
+  color: #357abd;
+  text-decoration: underline;
+}
+
+.form-title {
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 24px;
+}
+
+/* Estilos para campos de registro */
+.input-group {
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.input-group input.ng-invalid.ng-touched {
+  border-color: #ff4444;
+}
+
+.error-message {
+  color: #ff4444;
+  font-size: 12px;
+  margin-top: 5px;
 }

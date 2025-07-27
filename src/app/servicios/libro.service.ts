@@ -15,14 +15,28 @@ export class LibroService {
     private authService: AuthService
   ) {}
 
-  getLibros(): Observable<Libro[]> {
+  private getHeaders() {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders({
+    return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
+  }
 
-    return this.http.get<Libro[]>(this.apiUrl, { headers });
+  getLibros(): Observable<Libro[]> {
+    return this.http.get<Libro[]>(this.apiUrl, { headers: this.getHeaders() });
+  }
+
+  createLibro(libro: Libro): Observable<Libro> {
+    return this.http.post<Libro>(this.apiUrl, libro, { headers: this.getHeaders() });
+  }
+
+  updateLibro(id: number, libro: Libro): Observable<Libro> {
+    return this.http.put<Libro>(`${this.apiUrl}/${id}`, libro, { headers: this.getHeaders() });
+  }
+
+  deleteLibro(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
 }

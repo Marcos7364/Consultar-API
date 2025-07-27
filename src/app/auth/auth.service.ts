@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, map, throwError } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { RegisterResponse } from '../interfaces/register-response';
+
 
 interface LoginResponse {
   usuario: {
@@ -11,6 +13,8 @@ interface LoginResponse {
   };
   token: string;
 }
+
+
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +39,19 @@ export class AuthService {
       })
     );
   }
+  register(nombre: string, email: string, password: string): Observable<RegisterResponse> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    const body = { 
+      nombre, 
+      email, 
+      password,
+      rol: 'usuario' // Por defecto será usuario normal
+    };
+
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, body, { headers });
+  }
+
+
 
   isAuthenticated(): boolean {
     return !!localStorage.getItem('token');
@@ -46,6 +63,15 @@ export class AuthService {
 
   getRole(): string | null {
     return localStorage.getItem('userRole');
+  }
+
+  /**
+   * Verifica si el usuario tiene el rol especificado.
+   * Por defecto, comprueba si es 'admin'.
+   */
+  hasRole(role: string = 'admin'): boolean {
+    const userRole = this.getRole();
+    return userRole === role;
   }
 
   logout(): void {
