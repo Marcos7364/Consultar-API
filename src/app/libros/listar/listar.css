@@ -60,10 +60,55 @@
   flex: 1;
   padding: 0.5rem;
   font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.text-muted {
-  font-size: 0.875rem;
+.btn-outline-warning {
+  color: #ffc107;
+  border-color: #ffc107;
+}
+
+.btn-outline-warning:hover,
+.btn-outline-warning.active {
+  background-color: #ffc107;
+  color: white;
+  
+}
+
+.nav-link {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.nav-link i {
+  margin-right: 6px;
+  white-space: nowrap;
+}
+
+.nav-link.active {
+  color: #fff !important;
+  font-weight: bold;
+}
+
+.btn-group {
+  gap: 5px;
+}
+
+.btn-group .btn {
+  flex: 1;
+}
+
+.fa-heart {
+  color: #dc3545;
+}
+
+.fa-heart-o {
+  color: #6c757d;
 }
 
 .spinner-border {
@@ -80,4 +125,45 @@
 .swal2-input, .swal2-textarea {
   width: 90% !important;
   margin: 0.5em auto !important;
+}
+
+.fa-star {
+  color: #ffc107;
+
+}
+
+.fa-star-o {
+  color: #6c757d;
+}
+
+.btnbusq,
+.btncs {
+  height: 38px;                /* altura unificada y más baja */
+  padding: 0 14px;             /* padding horizontal solo */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.btnbusq {
+  background-color: #007bff;
+  color: white;
+  margin-left: 8px;
+}
+
+.btncs {
+  background-color: #dc3545;
+  color: white;
+  margin-left: 8px;
+}
+
+.btn, .nav-link {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

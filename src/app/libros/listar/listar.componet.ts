@@ -30,12 +30,16 @@ export class ListarComponent implements OnInit {
   error: string = '';
   isLoading: boolean = false;
   isAdmin: boolean = false;
-
-  // Variables para paginación
   paginaActual: number = 1;
   elementosPorPagina: number = 10;
-  totalPaginas: number = 0;
   totalElementos: number = 0;
+  totalPaginas: number = 0;
+  // Add these properties
+  showingFavorites: boolean = false;
+  private favorites: Set<number> = new Set();
+  allBooks: Libro[] = [];
+
+  private readonly DRIVE_FOLDER_ID = '1FJRAoKK4IjSeXVkE5Hfz1QwuGLukIL3k';
 
   constructor(
     private libroService: LibroService,
@@ -43,6 +47,49 @@ export class ListarComponent implements OnInit {
     private router: Router
   ) {
     this.isAdmin = this.authService.hasRole('admin');
+    this.loadFavorites();
+  }
+
+  private loadFavorites(): void {
+    const savedFavorites = localStorage.getItem('favorites');
+    if (savedFavorites) {
+      this.favorites = new Set(JSON.parse(savedFavorites));
+    }
+  }
+
+  esFavorito(id: number | undefined): boolean {
+    return id ? this.favorites.has(id) : false;
+  }
+
+  toggleFavorito(libro: Libro): void {
+    if (!libro.id) return;
+
+    if (this.favorites.has(libro.id)) {
+      this.favorites.delete(libro.id);
+      Swal.fire({
+        icon: 'success',
+        title: 'Eliminado de favoritos',
+        toast: true,
+        position: 'bottom-end',
+        showConfirmButton: false,
+        timer: 3000
+      });
+    } else {
+      this.favorites.add(libro.id);
+      Swal.fire({
+        icon: 'success',
+        title: 'Añadido a favoritos',
+        toast: true,
+        position: 'bottom-end',
+        showConfirmButton: false,
+        timer: 3000
+      });
+    }
+
+    localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
+    if (this.showingFavorites) {
+      this.showFavorites(); // Refresh the list if we're in favorites view
+    }
   }
 
   buscarLibros(event?: Event): void {
@@ -287,4 +334,79 @@ export class ListarComponent implements OnInit {
       }
     });
   }
+
+  downloadFromDrive(libro: Libro): void {
+    // Normalizar el nombre del libro para que coincida con el archivo en Drive
+    const fileName = `${libro.titulo.toLowerCase().trim()}.pdf`;
+    
+    // ID de la carpeta de Drive donde están los PDFs
+    const driveUrl = `https://drive.google.com/drive/folders/${this.DRIVE_FOLDER_ID}`;
+    
+    // Buscar el archivo por nombre en la carpeta
+    const fileUrl = `https://drive.google.com/drive/folders/${this.DRIVE_FOLDER_ID}?q=name%3D'${encodeURIComponent(fileName)}'`;
+
+    Swal.fire({
+      title: 'Opciones de acceso',
+      html: `
+        <p>Libro: ${libro.titulo}</p>
+        <div class="mt-3">
+          <a href="${driveUrl}" target="_blank" class="btn btn-primary mx-2">
+            <i class="fas fa-download"></i> Acceder al PDF
+          </a>
+        </div>
+      `,
+      showConfirmButton: false,
+      showCancelButton: true,
+      cancelButtonText: 'Cerrar'
+    });
+  }
+
+  downloadPdf(libro: Libro): void {
+    if (!libro.pdf_url) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No hay archivo PDF disponible para este libro'
+      });
+      return;
+    }
+
+    // Verificar si es una URL de Google Drive
+    if (libro.pdf_url.includes('drive.google.com')) {
+      // Convertir el enlace de vista a enlace de descarga
+      const fileId = libro.pdf_url.match(/[-\w]{25,}/);
+      if (fileId) {
+        const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId[0]}`;
+        window.open(downloadUrl, '_blank');
+      }
+    } else {
+      // Si no es de Drive, abrir directamente
+      window.open(libro.pdf_url, '_blank');
+    }
+  }
+
+
+ showFavorites(): void {
+  this.showingFavorites = true;
+  // Filter from original list of books
+  this.libros = this.librosOriginales.filter(libro => 
+    libro.id && this.favorites.has(libro.id)
+  );
+  
+  this.totalElementos = this.libros.length;
+  this.paginaActual = 1; // Reset to first page
+  this.calcularPaginacion();
+  this.actualizarLibrosPaginados();
+}
+
+showAllBooks(): void {
+  this.showingFavorites = false;
+  this.libros = [...this.librosOriginales];
+  this.totalElementos = this.libros.length;
+  this.paginaActual = 1; // Reset to first page
+  this.calcularPaginacion();
+  this.actualizarLibrosPaginados();
+}
+
+  
 }
