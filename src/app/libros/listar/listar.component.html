@@ -15,15 +15,18 @@
           <a class="nav-link" href="javascript:void(0)">Usuarios</a>
         </li>
       </ul>
-      <form class="d-flex" (submit)="buscarLibros($event)">
-        <input class="form-control me-2" 
-               type="text" 
-               placeholder="Buscar libros..." 
-               [(ngModel)]="terminoBusqueda"
-               name="busqueda">
-        <button class="btn btn-primary" type="submit">Buscar</button>
-      </form>
+      <div class="w-100 d-flex justify-content-center">
+        <form class="d-flex" style="max-width: 400px; width: 100%;" (submit)="buscarLibros($event)">
+          <input class="form-control me-2" 
+                 type="text" 
+                 placeholder="Buscar libros..." 
+                 [(ngModel)]="terminoBusqueda"
+                 name="busqueda">
+          <button class="btn btn-primary" type="submit">Buscar</button>
+        </form>
+      </div>
     </div>
+     <button class="btn btn-outline-danger ms-3" (click)="cerrarSesion()">Cerrar sesión</button>
   </div>
 </nav>
 
@@ -70,7 +73,7 @@
         <div class="card-body">
           <h5 class="card-title">{{libro.titulo}}</h5>
           <p class="card-text">{{libro.autor}}</p>
-          <p class="card-text"><small class="text-muted">ISBN: {{libro.id}}</small></p>
+          <p class="card-text"><small class="text-muted">Categoria: {{libro.categoria_id}}</small></p>
           <p class="card-text description">{{libro.descripcion}}</p>
         </div>
         <div class="card-footer bg-transparent border-0" *ngIf="isAdmin">

@@ -18,6 +18,10 @@ import { FormsModule } from '@angular/forms'; // Añade esta importación
   styleUrls: ['./listar.css']
 })
 export class ListarComponent implements OnInit {
+  cerrarSesion(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
   terminoBusqueda: string = '';
   librosOriginales: Libro[] = []; // Añade esta línea
 
