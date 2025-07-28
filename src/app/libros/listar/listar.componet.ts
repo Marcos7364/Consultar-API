@@ -7,19 +7,31 @@ import { Libro } from '../../interfaces/libro.interface';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import Swal from 'sweetalert2';
+import { FormsModule } from '@angular/forms'; // Añade esta importación
+
 
 @Component({
   selector: 'app-listar',
   templateUrl: './listar.component.html',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   styleUrls: ['./listar.css']
 })
 export class ListarComponent implements OnInit {
+  terminoBusqueda: string = '';
+  librosOriginales: Libro[] = []; // Añade esta línea
+
   libros: Libro[] = [];
+  librosPaginados: Libro[] = [];
   error: string = '';
   isLoading: boolean = false;
   isAdmin: boolean = false;
+
+  // Variables para paginación
+  paginaActual: number = 1;
+  elementosPorPagina: number = 10;
+  totalPaginas: number = 0;
+  totalElementos: number = 0;
 
   constructor(
     private libroService: LibroService,
@@ -28,6 +40,31 @@ export class ListarComponent implements OnInit {
   ) {
     this.isAdmin = this.authService.hasRole('admin');
   }
+
+  buscarLibros(event?: Event): void {
+  if (event) {
+    event.preventDefault(); // Prevenir recarga de página en el formulario
+  }
+
+  if (!this.terminoBusqueda || this.terminoBusqueda.trim() === '') {
+    // Si no hay término, mostrar todos los libros
+    this.libros = [...this.librosOriginales || this.libros];
+  } else {
+    // Filtrar libros localmente
+    const termino = this.terminoBusqueda.toLowerCase().trim();
+    this.libros = (this.librosOriginales || this.libros).filter(libro => 
+      libro.titulo.toLowerCase().includes(termino) || 
+      (libro.autor && libro.autor.toLowerCase().includes(termino))
+    );
+  }
+
+  // Actualizar paginación
+  this.totalElementos = this.libros.length;
+  this.paginaActual = 1;
+  this.calcularPaginacion();
+  this.actualizarLibrosPaginados();
+}
+
 
   ngOnInit(): void {
     this.cargarLibros();
@@ -56,7 +93,91 @@ export class ListarComponent implements OnInit {
       )
       .subscribe(data => {
         this.libros = data;
+        this.librosOriginales = [...data]; // Guarda copia de los originales
+
+        this.totalElementos = data.length;
+        this.calcularPaginacion();
+        this.actualizarLibrosPaginados();
       });
+  }
+
+  calcularPaginacion(): void {
+    this.totalPaginas = Math.ceil(this.totalElementos / this.elementosPorPagina);
+    
+    // Asegurar que la página actual esté dentro del rango válido
+    if (this.paginaActual > this.totalPaginas) {
+      this.paginaActual = this.totalPaginas;
+    }
+    if (this.paginaActual < 1) {
+      this.paginaActual = 1;
+    }
+  }
+
+  actualizarLibrosPaginados(): void {
+    const inicio = (this.paginaActual - 1) * this.elementosPorPagina;
+    const fin = inicio + this.elementosPorPagina;
+    this.librosPaginados = this.libros.slice(inicio, fin);
+  }
+
+  irAPagina(pagina: number): void {
+    if (pagina >= 1 && pagina <= this.totalPaginas) {
+      this.paginaActual = pagina;
+      this.actualizarLibrosPaginados();
+    }
+  }
+
+  paginaAnterior(): void {
+    if (this.paginaActual > 1) {
+      this.paginaActual--;
+      this.actualizarLibrosPaginados();
+    }
+  }
+
+  paginaSiguiente(): void {
+    if (this.paginaActual < this.totalPaginas) {
+      this.paginaActual++;
+      this.actualizarLibrosPaginados();
+    }
+  }
+
+  // Métodos auxiliares para la paginación
+  get puedeIrAnterior(): boolean {
+    return this.paginaActual > 1;
+  }
+
+  get puedeIrSiguiente(): boolean {
+    return this.paginaActual < this.totalPaginas;
+  }
+
+  get rangoElementos(): string {
+    if (this.totalElementos === 0) {
+      return 'No hay elementos';
+    }
+    
+    const inicio = (this.paginaActual - 1) * this.elementosPorPagina + 1;
+    const fin = Math.min(this.paginaActual * this.elementosPorPagina, this.totalElementos);
+    
+    return `${inicio} - ${fin} de ${this.totalElementos}`;
+  }
+
+  // Generar array de números de página para mostrar en la paginación
+  get numerosPagina(): number[] {
+    const paginas: number[] = [];
+    const maxPaginasVisibles = 5;
+    
+    let inicio = Math.max(1, this.paginaActual - Math.floor(maxPaginasVisibles / 2));
+    let fin = Math.min(this.totalPaginas, inicio + maxPaginasVisibles - 1);
+    
+    // Ajustar el inicio si estamos cerca del final
+    if (fin - inicio < maxPaginasVisibles - 1) {
+      inicio = Math.max(1, fin - maxPaginasVisibles + 1);
+    }
+    
+    for (let i = inicio; i <= fin; i++) {
+      paginas.push(i);
+    }
+    
+    return paginas;
   }
 
   onEdit(libro: Libro): void {

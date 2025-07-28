@@ -1,1 +1,8 @@
-<p>admin works!</p>
+<div class="admin-container">
+  <h2>Panel de Administrador</h2>
+  <div class="admin-buttons">
+    <button class="admin-btn" routerLink="/users">Gestión de Usuarios</button>
+    <button class="admin-btn" routerLink="/libros">Gestión de Libros</button>
+  </div>
+  <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
+</div>
