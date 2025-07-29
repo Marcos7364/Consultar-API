@@ -16,10 +16,12 @@ import { AuthInterceptor } from './shared/auth-interceptor';
 // Guards
 import { AuthGuard } from './shared/auth-guard';
 import { AdminGuard } from './shared/admin-guard';
+import { UsuariosComponent } from './usuarios/usuarios';
+import { ListarComponent } from './libros/listar/listar.componet';
 
 @NgModule({
   declarations: [
-    // empty since both components are standalone
+  
   ],
   imports: [
     BrowserModule,
@@ -28,7 +30,7 @@ import { AdminGuard } from './shared/admin-guard';
     ReactiveFormsModule,
     HttpClientModule,
     LoginComponent,
-    AppComponent
+    AppComponent,
   ],
   providers: [
     AuthService,

@@ -132,6 +132,42 @@ export class ListarComponent implements OnInit {
   window.removeEventListener('popstate', this.handleBackNavigation);
   }
 
+  eliminarCuenta(): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará tu cuenta de forma permanente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar cuenta',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.authService.deleteAccount().subscribe({
+          next: () => {
+            Swal.fire(
+              '¡Cuenta eliminada!',
+              'Tu cuenta ha sido eliminada correctamente.',
+              'success'
+            );
+            this.authService.logout(); // Cierra sesión
+            this.router.navigate(['/login']);
+          },
+          error: (error) => {
+            Swal.fire(
+              'Error',
+              'Ocurrió un error al eliminar la cuenta. Inténtalo de nuevo.',
+              'error'
+            );
+            console.error('Error al eliminar cuenta:', error);
+          }
+        });
+      }
+    });
+  }
+
+
   cargarLibros(): void {
     this.isLoading = true;
     this.error = '';

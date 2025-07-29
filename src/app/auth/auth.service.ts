@@ -60,6 +60,47 @@ export class AuthService {
 
     return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, body, { headers });
   }
+  deleteAccount(): Observable<any> {
+  const userId = this.getUser()?.id;
+  return this.http.delete(`${this.apiUrl}/usuarios/${userId}`);
+  }
+  // Obtener todos los usuarios (solo admin)
+getAllUsers(): Observable<any[]> {
+  const token = this.getToken();
+  const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+  return this.http.get<any[]>(`${this.apiUrl}/usuarios`, { headers });
+}
+
+  // Obtener usuario por id
+  getUserById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/usuarios/${id}`);
+  }
+
+
+  // Eliminar usuario por id (solo admin)
+  deleteUser(id: number): Observable<any> {
+  const token = this.getToken();
+  const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+  return this.http.delete(`${this.apiUrl}/usuarios/${id}`, { headers });
+}
+updateUser(id: number, usuario: any): Observable<any> {
+  const token = this.getToken();
+  const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+  return this.http.put<any>(`${this.apiUrl}/usuarios/${id}`, usuario, { headers });
+}
+
+  // Crear un nuevo usuario
+createUser(usuario: any): Observable<any> {
+  const token = this.getToken();
+  const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+  return this.http.post<any>(`${this.apiUrl}/usuarios`, usuario, { headers });
+}
+
+
+
+
+
+
 
 
 

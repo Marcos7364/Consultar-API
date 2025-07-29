@@ -1,0 +1,36 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-primary">Administrar Usuarios</h2>
+    <button class="btn btn-success" (click)="onCreateUser()">
+      <i class="fas fa-user-plus"></i> Añadir Usuario
+    </button>
+  </div>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Rol</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of usuarios">
+        <td>{{ user.id }}</td>
+        <td>{{ user.nombre }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.rol }}</td>
+        <td>
+          <button class="btn btn-primary btn-sm me-2" (click)="onEditUser(user)">
+            <i class="fas fa-edit"></i> Actualizar
+          </button>
+          <button class="btn btn-danger btn-sm" (click)="eliminarUsuario(user.id)">
+            <i class="fas fa-trash"></i> Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
