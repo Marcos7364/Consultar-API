@@ -21,11 +21,7 @@
       </ul>
       <div class="w-100 d-flex justify-content-center">
         <form class="d-flex" style="max-width: 400px; width: 100%;" (submit)="buscarLibros($event)">
-          <input class="form-control me-2" 
-                 type="text" 
-                 placeholder="Buscar libros..." 
-                 [(ngModel)]="terminoBusqueda"
-                 name="busqueda">
+          <input class="form-control me-2" type="text" placeholder="Buscar libros..." [(ngModel)]="terminoBusqueda" name="busqueda">
           <button class="btnbusq btn-primary" type="submit">Buscar</button>
         </form>
       </div>
@@ -40,7 +36,7 @@
       <h2 class="text-primary">Catálogo de Libros</h2>
     </div>
     <div class="col-auto" *ngIf="isAdmin">
-      <button class="btn btn-success" routerLink="/libros/crear">
+      <button class="btn btn-primary" (click)="onCreateNew()">
         <i class="fas fa-plus"></i> Nuevo Libro
       </button>
     </div>
@@ -65,9 +61,7 @@
     <div class="col" *ngFor="let libro of librosPaginados">
       <div class="card h-100 shadow-sm rounded-4">
         <div class="card-img-wrapper">
-          <img [src]="libro.img_url || 'assets/images/default-book.jpg'" 
-               class="card-img-top book-cover-img" 
-               [alt]="libro.titulo">
+          <img [src]="libro.img_url || 'assets/images/default-book.jpg'" class="card-img-top book-cover-img" [alt]="libro.titulo">
         </div>
         <div class="card-body">
           <h5 class="card-title">{{ libro.titulo }}</h5>
@@ -76,23 +70,30 @@
           <p class="card-text description">{{ libro.descripcion }}</p>
         </div>
 
-        <!-- Botones usuarios normales -->
+        <!-- Botones para usuarios normales -->
         <div class="card-footer bg-transparent border-0" *ngIf="!isAdmin">
           <div class="btn-group w-100">
             <button class="btn btn-outline-primary flex-grow-1" (click)="downloadPdf(libro)">
               <i class="fas fa-download"></i> Descargar
             </button>
-            <button class="btn btn-outline-warning flex-grow-1" 
-                    (click)="toggleFavorito(libro)"
-                    [class.active]="esFavorito(libro.id)">
+            <button class="btn btn-outline-warning flex-grow-1" (click)="toggleFavorito(libro)" [class.active]="esFavorito(libro.id)">
               <i class="fas fa-star" [class.text-warning]="esFavorito(libro.id)" [class.text-secondary]="!esFavorito(libro.id)"></i>
               {{ esFavorito(libro.id) ? 'Guardado' : 'Guardar' }}
             </button>
           </div>
         </div>
 
-        <!-- Botones admin -->
+        <!-- Botones para admin -->
         <div class="card-footer bg-transparent border-0" *ngIf="isAdmin">
+          <!-- Botón de favorito centrado -->
+          <div class="d-flex justify-content-center mb-2">
+            <button class="btn btn-outline-warning flex-grow-1" (click)="toggleFavorito(libro)" [class.active]="esFavorito(libro.id)">
+              <i class="fas fa-star" [class.text-warning]="esFavorito(libro.id)" [class.text-secondary]="!esFavorito(libro.id)"></i>
+              {{ esFavorito(libro.id) ? 'Guardado' : 'Guardar' }}
+            </button>
+          </div>
+
+          <!-- Botones de edición y eliminación -->
           <div class="btn-group w-100">
             <button class="btn btn-outline-primary" (click)="onEdit(libro)">
               <i class="fas fa-edit"></i> Editar
@@ -106,26 +107,26 @@
     </div>
   </div>
 
-  <div class="alert alert-info" *ngIf="!isLoading && !error && totalElementos === 0">
+  <!-- Mensaje cuando no hay libros -->
+  <div class="alert alert-info mt-4" *ngIf="!isLoading && !error && totalElementos === 0">
     No hay libros disponibles.
+  </div>
+
+  <!-- Paginación (fuera de las tarjetas) -->
+  <div class="d-flex justify-content-center mt-4" *ngIf="totalPaginas > 1">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="!puedeIrAnterior">
+        <a class="page-link" href="#" (click)="$event.preventDefault(); paginaAnterior()">Anterior</a>
+      </li>
+      <li class="page-item" *ngFor="let pagina of numerosPagina" [class.active]="pagina === paginaActual">
+        <a class="page-link" href="#" (click)="$event.preventDefault(); irAPagina(pagina)">
+          {{ pagina }}
+        </a>
+      </li>
+      <li class="page-item" [class.disabled]="!puedeIrSiguiente">
+        <a class="page-link" href="#" (click)="$event.preventDefault(); paginaSiguiente()">Siguiente</a>
+      </li>
+    </ul>
   </div>
 </div>
 
-<!-- Paginación -->
-<div class="d-flex justify-content-center mt-4" *ngIf="totalPaginas > 1">
-  <ul class="pagination">
-    <li class="page-item" [class.disabled]="!puedeIrAnterior">
-      <a class="page-link" href="#" (click)="$event.preventDefault(); paginaAnterior()">Anterior</a>
-    </li>
-
-    <li class="page-item" *ngFor="let pagina of numerosPagina" [class.active]="pagina === paginaActual">
-      <a class="page-link" href="#" (click)="$event.preventDefault(); irAPagina(pagina)">
-        {{ pagina }}
-      </a>
-    </li>
-
-    <li class="page-item" [class.disabled]="!puedeIrSiguiente">
-      <a class="page-link" href="#" (click)="$event.preventDefault(); paginaSiguiente()">Siguiente</a>
-    </li>
-  </ul>
-</div>

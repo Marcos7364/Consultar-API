@@ -9,7 +9,7 @@ import { AuthService } from '../auth/auth.service';
 })
 export class LibroService {
   private apiUrl = 'http://localhost:8000/api/libros';
-
+  
   constructor(
     private http: HttpClient,
     private authService: AuthService
@@ -29,7 +29,7 @@ export class LibroService {
   }
 
   createLibro(libro: Libro): Observable<Libro> {
-    return this.http.post<Libro>(this.apiUrl, libro, { headers: this.getHeaders() });
+    return this.http.post<Libro>(`${this.apiUrl}`, libro, { headers: this.getHeaders() });
   }
 
   updateLibro(id: number, libro: Libro): Observable<Libro> {

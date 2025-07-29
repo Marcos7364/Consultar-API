@@ -119,6 +119,14 @@ export class ListarComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarLibros();
+    window.addEventListener('popstate', this.handleBackNavigation);
+  }
+  handleBackNavigation = (event: PopStateEvent) => {
+    this.cerrarSesion();
+  };
+
+  ngOnDestroy(): void {
+  window.removeEventListener('popstate', this.handleBackNavigation);
   }
 
   cargarLibros(): void {
@@ -247,6 +255,8 @@ export class ListarComponent implements OnInit {
         <input id="swal-titulo" class="swal2-input" placeholder="Título" value="${libro.titulo}">
         <input id="swal-autor" class="swal2-input" placeholder="Autor" value="${libro.autor}">
         <textarea id="swal-descripcion" class="swal2-textarea" placeholder="Descripción">${libro.descripcion}</textarea>
+        <input id="swal-img-url" class="swal2-input" placeholder="URL de Imagen" value="${libro.img_url || ''}">
+        <input id="swal-pdf-url" class="swal2-input" placeholder="URL de PDF" value="${libro.pdf_url || ''}">
       `,
       showCancelButton: true,
       confirmButtonText: 'Guardar',
@@ -255,21 +265,28 @@ export class ListarComponent implements OnInit {
         const titulo = (document.getElementById('swal-titulo') as HTMLInputElement).value;
         const autor = (document.getElementById('swal-autor') as HTMLInputElement).value;
         const descripcion = (document.getElementById('swal-descripcion') as HTMLTextAreaElement).value;
+        const img_url = (document.getElementById('swal-img-url') as HTMLInputElement).value.trim();
+        const pdf_url = (document.getElementById('swal-pdf-url') as HTMLInputElement).value.trim();
         
-        if (!titulo || !autor || !descripcion) {
+        if (!titulo || !autor || !descripcion || !img_url || !pdf_url) {
           Swal.showValidationMessage('Por favor complete todos los campos');
           return false;
         }
+
+        return { titulo, autor, descripcion, img_url, pdf_url };
         
-        return { titulo, autor, descripcion };
       }
+
+      
     }).then((result) => {
       if (result.isConfirmed) {
         const updatedLibro: Libro = {
           ...libro,
           titulo: result.value.titulo,
           autor: result.value.autor,
-          descripcion: result.value.descripcion
+          descripcion: result.value.descripcion,
+          img_url: result.value.img_url,
+          pdf_url: result.value.pdf_url
         };
 
         this.libroService.updateLibro(libro.id!, updatedLibro).subscribe({
@@ -335,31 +352,7 @@ export class ListarComponent implements OnInit {
     });
   }
 
-  downloadFromDrive(libro: Libro): void {
-    // Normalizar el nombre del libro para que coincida con el archivo en Drive
-    const fileName = `${libro.titulo.toLowerCase().trim()}.pdf`;
-    
-    // ID de la carpeta de Drive donde están los PDFs
-    const driveUrl = `https://drive.google.com/drive/folders/${this.DRIVE_FOLDER_ID}`;
-    
-    // Buscar el archivo por nombre en la carpeta
-    const fileUrl = `https://drive.google.com/drive/folders/${this.DRIVE_FOLDER_ID}?q=name%3D'${encodeURIComponent(fileName)}'`;
-
-    Swal.fire({
-      title: 'Opciones de acceso',
-      html: `
-        <p>Libro: ${libro.titulo}</p>
-        <div class="mt-3">
-          <a href="${driveUrl}" target="_blank" class="btn btn-primary mx-2">
-            <i class="fas fa-download"></i> Acceder al PDF
-          </a>
-        </div>
-      `,
-      showConfirmButton: false,
-      showCancelButton: true,
-      cancelButtonText: 'Cerrar'
-    });
-  }
+ 
 
   downloadPdf(libro: Libro): void {
     if (!libro.pdf_url) {
@@ -407,6 +400,73 @@ showAllBooks(): void {
   this.calcularPaginacion();
   this.actualizarLibrosPaginados();
 }
+     onCreateNew(): void {
+    Swal.fire({
+      title: 'Crear Nuevo Libro',
+      html: `
+        <input id="swal-titulo" class="swal2-input" placeholder="Título">
+        <input id="swal-autor" class="swal2-input" placeholder="Autor">
+        <textarea id="swal-descripcion" class="swal2-textarea" placeholder="Descripción"></textarea>
+        <input id="swal-img-url" class="swal2-input" placeholder="URL de la imagen">
+        <input id="swal-pdf-url" class="swal2-input" placeholder="URL del PDF">
+        <select id="swal-categoria" class="swal2-input">
+          <option value="">Seleccione una categoría</option>
+          <option value="1">Ficción</option>
+          <option value="2">No Ficción</option>
+          <option value="3">Ciencia</option>
+          <!-- Add more categories as needed -->
+        </select>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Crear',
+      cancelButtonText: 'Cancelar',
+      preConfirm: () => {
+        const titulo = (document.getElementById('swal-titulo') as HTMLInputElement).value;
+        const autor = (document.getElementById('swal-autor') as HTMLInputElement).value;
+        const descripcion = (document.getElementById('swal-descripcion') as HTMLTextAreaElement).value;
+        const img_url = (document.getElementById('swal-img-url') as HTMLInputElement).value;
+        const pdf_url = (document.getElementById('swal-pdf-url') as HTMLInputElement).value;
+        const categoria_id = (document.getElementById('swal-categoria') as HTMLSelectElement).value;
+
+        if (!titulo || !autor || !descripcion || !categoria_id) {
+          Swal.showValidationMessage('Por favor complete los campos obligatorios');
+          return false;
+        }
+
+        return { 
+          titulo, 
+          autor, 
+          descripcion, 
+          img_url, 
+          pdf_url,
+          categoria_id: parseInt(categoria_id)
+        };
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const newLibro: Libro = result.value;
+
+        this.libroService.createLibro(newLibro).subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: 'Libro creado correctamente'
+            });
+            this.cargarLibros(); // Reload the books list
+          },
+          error: (error) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: error.error.message || 'Error al crear el libro. Por favor, intente nuevamente.'
+            });
+            console.error('Error al crear:', error);
+          }
+        });
+      }
+    });
+  }
 
   
 }

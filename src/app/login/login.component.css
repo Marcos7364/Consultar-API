@@ -159,7 +159,7 @@
 
 .input-group input.invalid {
   border-color: #ff4444;
-  background-color: rgba(255, 68, 68, 0.05);
+  background-color: rgba(246, 8, 8, 0.601);
 }
 
 .error-message {
