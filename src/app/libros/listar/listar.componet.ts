@@ -18,7 +18,8 @@ import { FormsModule } from '@angular/forms'; // Añade esta importación
   styleUrls: ['./listar.css']
 })
 export class ListarComponent implements OnInit {
-  cerrarSesion(): void {
+   usuario: any = null;
+   cerrarSesion(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
@@ -119,7 +120,9 @@ export class ListarComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarLibros();
+    this.usuario = this.authService.getUser ? this.authService.getUser() : JSON.parse(localStorage.getItem('auth_user') || '{}');
     window.addEventListener('popstate', this.handleBackNavigation);
+
   }
   handleBackNavigation = (event: PopStateEvent) => {
     this.cerrarSesion();

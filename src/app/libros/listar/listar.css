@@ -138,8 +138,8 @@
 
 .btnbusq,
 .btncs {
-  height: 38px;                /* altura unificada y más baja */
-  padding: 0 14px;             /* padding horizontal solo */
+  height: 38px;              
+  padding: 0 14px;            
   display: inline-flex;
   align-items: center;
   justify-content: center;

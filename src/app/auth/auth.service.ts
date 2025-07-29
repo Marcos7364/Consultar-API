@@ -20,6 +20,16 @@ interface LoginResponse {
   providedIn: 'root',
 })
 export class AuthService {
+  getUser(): { id: number, email: string, nombre: string, rol: string } | null {
+    const id = localStorage.getItem('userId');
+    const email = localStorage.getItem('userEmail');
+    const nombre = localStorage.getItem('userName');
+    const rol = localStorage.getItem('userRole');
+    if (id && email && nombre && rol) {
+      return { id: Number(id), email, nombre, rol };
+    }
+    return null;
+  }
   private apiUrl = 'http://localhost:8000/api';
 
   constructor(private http: HttpClient) {}
