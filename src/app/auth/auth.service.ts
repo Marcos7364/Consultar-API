@@ -62,7 +62,9 @@ export class AuthService {
   }
   deleteAccount(): Observable<any> {
   const userId = this.getUser()?.id;
-  return this.http.delete(`${this.apiUrl}/usuarios/${userId}`);
+  const token = this.getToken();
+  const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+  return this.http.delete(`${this.apiUrl}/usuarios/${userId}`, { headers });
   }
   // Obtener todos los usuarios (solo admin)
 getAllUsers(): Observable<any[]> {

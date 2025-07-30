@@ -52,15 +52,34 @@ onCreateUser(): void {
   Swal.fire({
     title: 'Crear Nuevo Usuario',
     html: `
-      <input id="swal-nombre" class="swal2-input" placeholder="Nombre">
-      <input id="swal-email" class="swal2-input" placeholder="Email" type="email">
-      <input id="swal-password" class="swal2-input" placeholder="Contraseña" type="password">
-      <select id="swal-rol" class="swal2-select">
-        <option value="">Seleccione rol</option>
-        <option value="usuario">Usuario</option>
-        <option value="admin">Administrador</option>
-      </select>
-    `,
+    <input id="swal-nombre" class="swal2-input" placeholder="Nombre">
+    <input id="swal-email" class="swal2-input" placeholder="Email" type="email">
+    <div style="position: relative;">
+      <input id="swal-password" class="swal2-input" placeholder="Contraseña" type="password" style="padding-right: 40px;">
+      <button type="button" id="toggle-password" style="
+       
+        
+       border: none;
+      ">
+        👁️
+      </button>
+    </div>
+    <select id="swal-rol" class="swal2-select">
+      <option value="">Seleccione rol</option>
+      <option value="usuario">Usuario</option>
+      <option value="admin">Administrador</option>
+    </select>
+  `,
+    didOpen: () => {
+      const passwordInput = document.getElementById('swal-password') as HTMLInputElement;
+      const toggleBtn = document.getElementById('toggle-password');
+
+      toggleBtn?.addEventListener('click', () => {
+        const isHidden = passwordInput.type === 'password';
+        passwordInput.type = isHidden ? 'text' : 'password';
+        toggleBtn.textContent = isHidden ? '🙈' : '👁️';
+      });
+    },
     showCancelButton: true,
     confirmButtonText: 'Crear',
     cancelButtonText: 'Cancelar',
